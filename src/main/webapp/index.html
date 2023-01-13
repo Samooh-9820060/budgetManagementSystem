@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/fonts/icomoon/style.css">
+
+    <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    
+    <!-- Style -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <title>Sign In</title>
+  </head>
+  <body>
+  
+
+  
+  <div class="content">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <img src="assets/images/bg_2.png" alt="Image" class="img-fluid">
+        </div>
+        <div class="col-md-6 contents">
+          <div class="row justify-content-center">
+            <div class="col-md-8">
+              <div class="mb-4">
+              <h3>Sign In</h3>
+              <p class="mb-4">Please enter your username and password.</p>
+            </div>
+            <form action="signIn" method="post">
+              <div class="form-group first">
+                <label for="username">Username</label>
+                <input name="username" type="text" class="form-control" id="username" oninput="checkUsername()">
+
+              </div>
+              <div class="form-group last mb-4">
+                <label for="password">Password</label>
+                <input name="password" type="password" class="form-control" id="password">
+              </div>
+                <label style="font-size: 12px; color: red;" class="mb-3" id="validationText" ></label>
+
+              
+              <div class="d-flex mb-5 align-items-center">
+                <span class="m0-auto"><a href="jsp/signUp.jsp" class="forgot-pass">Sign Up</a></span> 
+              </div>
+                <input id="loginButton" type="submit" value="Log In" class="btn btn-block btn-primary" disabled="true">
+
+              <span class="d-block text-left my-4 text-muted">&mdash; or login with &mdash;</span>
+              
+              <div class="social-login">
+                <a href="#" class="facebook">
+                  <span class="icon-facebook mr-3"></span> 
+                </a>
+                <a href="#" class="twitter">
+                  <span class="icon-twitter mr-3"></span> 
+                </a>
+                <a href="#" class="google">
+                  <span class="icon-google mr-3"></span> 
+                </a>
+              </div>
+            </form>
+            </div>
+          </div>
+          
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  
+    <script src="assets/js/jquery-3.3.1.min.js"></script>
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+  <script>
+      function checkUsername(){
+          if (document.getElementById("username").value.length > 6){
+              document.getElementById("validationText").innerHTML = "";
+              document.getElementById("loginButton").disabled = false;
+          } else {
+              document.getElementById("validationText").innerHTML = "Username should be greater than 6 characters";
+              document.getElementById("loginButton").disabled = true;
+          }
+      }
+  </script>
+</html>
