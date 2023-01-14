@@ -89,6 +89,12 @@
                     </li>
                     <li>
                         <a href="#">
+                            <i class="fas fa-book"></i>
+                            <span>Report</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
                             <i class="fas fa-hands-helping"></i>
                             <span>Contact Us</span>
                         </a>
