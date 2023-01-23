@@ -108,12 +108,13 @@ public class dashboard extends HttpServlet {
     public List<transactionsModel> getTransactions(String username) throws SQLException{
         List<transactionsModel> transactions = new ArrayList<>();
         
-        String query = "SELECT TRANSACTION_ID, USERNAME, TYPE, AMOUNT, DATE, TIME, CATEGORY, DETAILS FROM TRANSACTIONS "
+        String query = "SELECT TRANSACTION_ID, USERNAME, TYPE, AMOUNT, DATE, TIME, CATEGORY, DETAILS, IS_DELETED FROM TRANSACTIONS "
                 + "ORDER BY DATE DESC, TIME DESC";
         ResultSet resultSet = dbconnection.statement().executeQuery(query);
         while (resultSet.next()){
             String resultUsername = (String) resultSet.getObject(2);
-            if  (resultUsername.equals(username)){
+            int is_deleted = (int) resultSet.getObject(9);
+            if  (resultUsername.equals(username) && is_deleted == 0){
                 String day = getDay((Date) resultSet.getObject(5));
                 transactionsModel transaction = new transactionsModel();
                 transaction.transaction_Id = (String) resultSet.getObject(1).toString();
@@ -141,11 +142,12 @@ public class dashboard extends HttpServlet {
     
     public int getIncomeValueUser(String username) throws SQLException{
         int value = 0;
-        String query = "SELECT USERNAME, TYPE, AMOUNT FROM TRANSACTIONS";
+        String query = "SELECT USERNAME, TYPE, AMOUNT, IS_DELETED FROM TRANSACTIONS";
         ResultSet resultSet = dbconnection.statement().executeQuery(query);
         while (resultSet.next()){
             String resultUserName = (String) resultSet.getObject(1);
-            if (resultUserName.equals(username)){
+            int is_deleted = (int) resultSet.getObject(4);
+            if (resultUserName.equals(username) && is_deleted == 0){
                 String resultType = (String) resultSet.getObject(2);
                 if (resultType.equalsIgnoreCase("income")){
                     int resultAmount = (int) resultSet.getObject(3);
@@ -159,11 +161,12 @@ public class dashboard extends HttpServlet {
     
     public int getExpenseValueUser(String username) throws SQLException{
         int value = 0;
-        String query = "SELECT USERNAME, TYPE, AMOUNT FROM TRANSACTIONS";
+        String query = "SELECT USERNAME, TYPE, AMOUNT, IS_DELETED FROM TRANSACTIONS";
         ResultSet resultSet = dbconnection.statement().executeQuery(query);
         while (resultSet.next()){
             String resultUserName = (String) resultSet.getObject(1);
-            if (resultUserName.matches(username)){
+            int is_deleted = (int) resultSet.getObject(4);
+            if (resultUserName.matches(username) && is_deleted == 0){
                 String resultType = (String) resultSet.getObject(2);
                 if (resultType.equalsIgnoreCase("expense")){
                     int resultAmount = (int) resultSet.getObject(3);

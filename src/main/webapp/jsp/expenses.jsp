@@ -239,9 +239,7 @@
                     </div>
 
                 </div>
-                <div class="col-sm-12 col-md-12 col-lg-12 transaction-history transaction-history-size-medium">
-                    <div class="card shadow">
-                        <div class="limiter">
+                <div class="col-sm-12 col-md-12 col-lg-12 transaction-history transaction-history-size-small">
                             <div class="container-fluid">
                                 <div class="wrap-pic-max-h">
                                     <div class="table ver1 m-b-110">
@@ -269,17 +267,14 @@
                                                 </c:forEach>
                                             </tbody>
                                         </table>
+                                            <div class="card-footer">
+                                                <div class="">
+                                                    <button class="btn btn-info" onclick="addNewTransactionForm()">Add New</button>
+                                                </div>
+                                            </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="card-footer">
-                            <div class="transaction-footer">
-                                <button class="btn btn-info" onclick="addNewTransactionForm()">Add New</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

@@ -114,7 +114,7 @@ public class addTransaction extends HttpServlet {
             
             //add data to database
             if (error == false){
-                String query = "INSERT INTO TRANSACTIONS (username,type,amount,date,time,details,category) VALUES (?,?,?,?,?,?,?)";
+                String query = "INSERT INTO TRANSACTIONS (username,type,amount,date,time,details,category, is_deleted) VALUES (?,?,?,?,?,?,?)";
                 PreparedStatement statement = dbconnection.connectDB().prepareStatement(query);
                 statement.setString(1,username);
                 statement.setString(2,choosenType);
@@ -123,6 +123,7 @@ public class addTransaction extends HttpServlet {
                 statement.setTime(5, time);
                 statement.setString(6, details);
                 statement.setString(7, category);
+                statement.setInt(8, 0);
                 statement.executeUpdate();
                 
                 response.sendRedirect("./dashboard");
