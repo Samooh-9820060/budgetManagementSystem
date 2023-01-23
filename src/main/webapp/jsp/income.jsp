@@ -44,6 +44,9 @@
         <div class="nav-link-right">
             <ul>
                 <li>
+                    <input style="align-content: center" type="text" placeholder="Search ..." class="btn-group-sm">
+                </li>
+                <li>
                     <a>Hi, ${username}</a>
                 </li>
                 <li class="max-1200" id="navOpener">

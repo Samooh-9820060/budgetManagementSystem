@@ -89,7 +89,7 @@ public class signIn extends HttpServlet {
                     result = "OK";
                     return result;
                 } else {
-                    result = "Wrong Pass";
+                    result = "Invalid username or password";
                     return result;
                 }
             }
