@@ -17,7 +17,10 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -114,21 +117,66 @@ public class addTransaction extends HttpServlet {
             
             //add data to database
             if (error == false){
-                String query = "INSERT INTO TRANSACTIONS (username,type,amount,date,time,details,category, is_deleted) VALUES (?,?,?,?,?,?,?)";
+                String query = "INSERT INTO TRANSACTIONS (user_id,transaction_date,category_id,amount,type_id,"
+                        + "description, created_date, status) "
+                + "VALUES ((SELECT user_id FROM USERS WHERE username = ?),?,(SELECT category_id FROM CATEGORIES WHERE category_name = ?),?,"
+                        + "(SELECT type_id FROM TRANSACTION_TYPES WHERE type_name = ?),?,?,?)";
+
+                
+                LocalDateTime currentDate = LocalDateTime.now();
+                Timestamp timestamp = Timestamp.valueOf(currentDate);
+            
+                int checkCategory = createCategoryIfNotExisting(username, category);
+                
                 PreparedStatement statement = dbconnection.connectDB().prepareStatement(query);
                 statement.setString(1,username);
-                statement.setString(2,choosenType);
-                statement.setInt(3,amount);
-                statement.setDate(4, date);
-                statement.setTime(5, time);
+                statement.setTimestamp(2,timestamp);
+                statement.setString(3, category);
+                statement.setInt(4, amount);
+                statement.setString(5, choosenType);
                 statement.setString(6, details);
-                statement.setString(7, category);
-                statement.setInt(8, 0);
+                statement.setTimestamp(7, timestamp);
+                statement.setBoolean(8, true);
                 statement.executeUpdate();
                 
                 response.sendRedirect("./dashboard");
             }
         }
+    }
+    
+    public int createCategoryIfNotExisting(String username, String name) throws SQLException{
+        
+        String query = "SELECT C.CATEGORY_NAME, U.USERNAME FROM CATEGORIES C JOIN USERS U ON U.USER_ID = C.USER_ID";
+        ResultSet resultSet = dbconnection.statement().executeQuery(query);
+        while (resultSet.next()){
+            if (username.equals(resultSet.getObject(2))&& name.equals(resultSet.getObject(1))){
+                return -1;
+            }
+        }
+        
+        String newQuery = "INSERT INTO CATEGORIES (user_id, category_name, created_at, status) VALUES ((SELECT user_id FROM USERS WHERE username = ?),?,?,?)";
+        LocalDateTime currentDate = LocalDateTime.now();
+        Timestamp timestamp = Timestamp.valueOf(currentDate);
+
+        PreparedStatement statement = dbconnection.connectDB().prepareStatement(newQuery);
+        statement.setString(1,username);
+        statement.setString(2,name);
+        statement.setTimestamp(3, timestamp);
+        statement.setBoolean(4, true);
+        statement.executeUpdate();
+        
+        int id = 0;
+
+        String getIDQuery = "SELECT CATEGORY_ID FROM CATEGORIES WHERE CATEGORY_NAME = '"+name+"' AND USER_ID = (SELECT user_id FROM USERS WHERE username = '"+username+"')";
+        Statement stmt = dbconnection.connectDB().createStatement();
+        ResultSet rs = stmt.executeQuery(getIDQuery);
+        if(rs.next()) {
+           id = rs.getInt("CATEGORY_ID");
+           return id;
+        }
+        rs.close();
+        stmt.close();
+        return 0;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

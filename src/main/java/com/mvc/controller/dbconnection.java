@@ -21,7 +21,7 @@ public class dbconnection {
     }
     
     public static Connection connectDB() throws SQLException{
-        Connection connection = DriverManager.getConnection("jdbc:derby://localhost:1527/budgetManager","username","password");
+        Connection connection = DriverManager.getConnection("jdbc:derby://localhost:1527/budgetManagementDB","budgetManager","user@123");
         return connection;
     }
 }

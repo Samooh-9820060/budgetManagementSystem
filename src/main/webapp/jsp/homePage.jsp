@@ -186,7 +186,7 @@
                                         <input type="text" name="transactionCategoryIncome" placeholder="Enter Category" class="mt-3" autocomplete="off">
                                         <input type="text" name="transactionDetailsIncome" placeholder="Enter Details" class="mt-3" autocomplete="off">
                                         <label style="color: red; font-family: sans-serif; font-size: 12px;" id="errorMessage">${errorMessage}</label>
-                                        <button class="mt-3 col-sm-6 btn-primary mx-auto" onclick="chooseType('income')">Add</button>
+                                        <button class="mt-3 col-sm-6 btn-primary mx-auto" onclick="chooseType('Income')">Add</button>
                                     </div>
                                 </div>
                             </div>
@@ -204,7 +204,7 @@
                                         <input type="text" name="transactionCategoryExpense" placeholder="Enter Category" class="mt-3" autocomplete="off">
                                         <input type="text" name="transactionDetailsExpense" placeholder="Enter Details" class="mt-3" autocomplete="off">
                                         <label style="color: red; font-family: sans-serif; font-size: 12px;" id="errorMessage">${errorMessage}</label>
-                                        <button class="mt-3 col-sm-6 btn-primary mx-auto" onclick="chooseType('expense')">Add</button>
+                                        <button class="mt-3 col-sm-6 btn-primary mx-auto" onclick="chooseType('Expense')">Add</button>
                                     </div>
                                 </div>
                             </div>

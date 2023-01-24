@@ -34,7 +34,6 @@ CREATE TABLE COUNTRIES (
     country_phone_code VARCHAR(100),
     time_zone VARCHAR(100),
     currency_id INT,
-    currency_code VARCHAR(100),
     FOREIGN KEY (currency_id) REFERENCES CURRENCIES (currency_id)
 );
 
@@ -110,7 +109,7 @@ CREATE TABLE ACCOUNTS (
     user_id INT,
     account_name VARCHAR(100),
     account_type VARCHAR(100),
-    account_number INT,
+    account_number VARCHAR(100),
     bank_name VARCHAR(100),
     current_balance INT,
     opening_date TIMESTAMP,
@@ -173,6 +172,7 @@ CREATE TABLE TRANSACTIONS (
     recurring_id INT,
     created_date TIMESTAMP,
     updated_date TIMESTAMP,
+    status BOOLEAN,
     FOREIGN KEY (user_id) REFERENCES USERS (user_id),
     FOREIGN KEY (account_id) REFERENCES ACCOUNTS (account_id),
     FOREIGN KEY (category_id) REFERENCES CATEGORIES (category_id),

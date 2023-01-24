@@ -12,7 +12,6 @@ public class transactionsModel {
     public String transaction_Id;
     public String category;
     public String date;
-    public String time;
     public String day;
     public String type;
     public String amount;
@@ -50,13 +49,6 @@ public class transactionsModel {
         this.date = date;
     }
 
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
 
     public String getDay() {
         return day;

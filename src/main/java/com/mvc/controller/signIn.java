@@ -81,13 +81,19 @@ public class signIn extends HttpServlet {
     public String checkUserName(String username, String password) throws SQLException{
         String result = "Invalid User";
         
-        ResultSet resultSet = dbconnection.statement().executeQuery("SELECT USERNAME, PASSWORD FROM USERS");
+        ResultSet resultSet = dbconnection.statement().executeQuery("SELECT USERNAME, PASSWORD, STATUS  FROM USERS");
         while (resultSet.next()){
             String resultUsername = (String) resultSet.getObject(1);
             if (resultUsername.matches(username)){
                 if (resultSet.getObject(2).equals(password)){
-                    result = "OK";
-                    return result;
+                    if (resultSet.getObject(3).toString().equals("true")){
+                        result = "OK";
+                        return result;
+                    } else {
+                        result = "Inactivated User";
+                        return result;
+                    }
+
                 } else {
                     result = "Invalid username or password";
                     return result;

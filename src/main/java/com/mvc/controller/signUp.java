@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,6 +23,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -50,20 +53,21 @@ public class signUp extends HttpServlet {
             String username = request.getParameter("username");
             String password = hashPass(request.getParameter("password"));
             
-            LocalDate currentDate = LocalDate.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String formattedDate = currentDate.format(formatter);
+            LocalDateTime currentDate = LocalDateTime.now();
+            Timestamp timestamp = Timestamp.valueOf(currentDate);
             
-            String duplicate = checkDuplicate(username);
+            boolean duplicate = checkDuplicate(username);
             
-            if (duplicate.equals("Ok")){
-                String sql = "INSERT INTO USERS (username,password,date,active) VALUES (?,?,?,?)";
+            if (duplicate == false){                
+                String sql = "INSERT INTO USERS (username,password,created_date,status,two_factor_authentication,credit_score) VALUES (?,?,?,?,?,?)";
                 PreparedStatement statement = dbconnection.connectDB().prepareStatement(sql);
                 statement.setString(1,username);
                 statement.setString(2,password);
-                statement.setString(3,formattedDate);
-                statement.setString(4, "1");
-                statement.executeUpdate();   
+                statement.setTimestamp(3, timestamp);
+                statement.setBoolean(4, true);
+                statement.setBoolean(5, false);
+                statement.setInt(6, 0);
+                statement.executeUpdate();  
                 response.sendRedirect("index.html");
             } else {
                 out.println("Duplicate");
@@ -76,19 +80,18 @@ public class signUp extends HttpServlet {
         }
     }
     
-    public String checkDuplicate(String username) throws SQLException{
-        String result = "Ok";
-        
+    public boolean checkDuplicate(String username) throws SQLException{
+        boolean duplicate = false;
         ResultSet resultSet = dbconnection.statement().executeQuery("SELECT USERNAME FROM USERS");
         while (resultSet.next()){
             String resultUsername = (String) resultSet.getObject(1);
             if (resultUsername.matches(username)){
-                result = "Duplicate";
-                return result;
+                duplicate = true;
+                return duplicate;
             }
         }
         
-        return result;
+        return duplicate;
     }
     
     //hash password in SHA 256 format to store in database
