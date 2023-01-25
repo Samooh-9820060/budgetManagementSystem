@@ -273,10 +273,10 @@
                                             </div>
                                             <div class="col-4 amt-right">
                                                 <span class="<c:choose>
-                                                                <c:when test="${data.type=='income'}">
+                                                                <c:when test="${data.type=='Income'}">
                                                                     amount income
                                                                 </c:when>
-                                                                <c:when test="${data.type=='expense'}">
+                                                                <c:when test="${data.type=='Expense'}">
                                                                     amount expense
                                                                 </c:when>
                                                             </c:choose>">

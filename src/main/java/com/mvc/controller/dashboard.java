@@ -16,6 +16,10 @@ import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -108,24 +112,28 @@ public class dashboard extends HttpServlet {
     public List<transactionsModel> getTransactions(String username) throws SQLException{
         List<transactionsModel> transactions = new ArrayList<>();
         
-        String query =  "SELECT T.TRANSACTION_ID, U.USERNAME, TT.TYPE_NAME, T.AMOUNT, T.CREATED_DATE, C.CATEGORY_NAME, T.DESCRIPTION, T.STATUS "
-                + "FROM TRANSACTIONS T "
-                + "JOIN USERS U ON T.USER_ID = U.USER_ID "
-                + "JOIN TRANSACTION_TYPES TT ON TT.TYPE_ID = T.TYPE_ID "
-                + "JOIN CATEGORIES C ON C.CATEGORY_ID = T.CATEGORY_ID";
+        String query =  "SELECT T.TRANSACTION_ID, U.USERNAME, TT.TYPE_NAME, T.AMOUNT, T.TRANSACTION_DATE, C.CATEGORY_NAME, T.DESCRIPTION, T.STATUS\n" +
+"FROM TRANSACTIONS T JOIN USERS U ON T.USER_ID = U.USER_ID JOIN TRANSACTION_TYPES TT ON TT.TYPE_ID = T.TYPE_ID \n" +
+"JOIN CATEGORIES C ON C.CATEGORY_ID = T.CATEGORY_ID ORDER BY T.TRANSACTION_DATE DESC";
         ResultSet resultSet = dbconnection.statement().executeQuery(query);
         while (resultSet.next()){
             String resultUsername = (String) resultSet.getObject(2);
-            String is_deleted = resultSet.getObject(8).toString();
-            if  (resultUsername.equals(username) && is_deleted.equals("false")){
-                System.out.println("ok");
-                String day = getDay((Date) resultSet.getObject(5));
+            String status = resultSet.getObject(8).toString();
+            
+            if  (resultUsername.equals(username) && status.equals("true")){
+                //String day = getDay(dateTime);
                 transactionsModel transaction = new transactionsModel();
                 transaction.transaction_Id = (String) resultSet.getObject(1).toString();
                 transaction.details = (String) resultSet.getObject(7).toString();
                 transaction.category = (String) resultSet.getObject(6);
-                transaction.date = (String) resultSet.getObject(5).toString();
-                transaction.day = day;
+                
+                Timestamp timestamp = (Timestamp) resultSet.getObject(5);
+                LocalDateTime dateTime = timestamp.toLocalDateTime();
+                String formattedTime = dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+                transaction.date = formattedTime;
+                
+                //transaction.date = resultSet.getObject(5).toString();
+                transaction.day = getDay((Timestamp) resultSet.getObject(5));
                 transaction.type = (String) resultSet.getObject(3);
                 transaction.amount = (String) resultSet.getObject(4).toString();
                 transactions.add(transaction);
@@ -133,10 +141,11 @@ public class dashboard extends HttpServlet {
         }
         return transactions;
     }
+   
     
-    public String getDay(Date date){
+    public String getDay(Timestamp timestamp){
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+        calendar.setTime(timestamp);
         int dayInt = calendar.get(Calendar.DAY_OF_WEEK);
         String[] days = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         String day = days[dayInt - 1];
@@ -154,8 +163,6 @@ public class dashboard extends HttpServlet {
             String status = resultSet.getObject(4).toString();
             if (resultUserName.equals(username) && status.equals("true")){
                 String resultType = (String) resultSet.getObject(2);
-                System.out.println(resultType);
-                System.out.println(type);
                 if (resultType.equalsIgnoreCase(type)){
                     int resultAmount = (int) resultSet.getObject(3);
                     value += resultAmount;

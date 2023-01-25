@@ -4,6 +4,8 @@
  */
 package com.mvc.model;
 
+import java.sql.Timestamp;
+
 /**
  *
  * @author samoo
@@ -12,10 +14,27 @@ public class transactionsModel {
     public String transaction_Id;
     public String category;
     public String date;
+    public String time;
     public String day;
     public String type;
     public String amount;
     public String details;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 
     public String getDetails() {
         return details;
@@ -40,15 +59,6 @@ public class transactionsModel {
     public void setCategory(String category) {
         this.category = category;
     }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
 
     public String getDay() {
         return day;
