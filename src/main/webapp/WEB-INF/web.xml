@@ -32,6 +32,10 @@
         <servlet-name>income</servlet-name>
         <servlet-class>com.mvc.controller.income</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>myProfile</servlet-name>
+        <servlet-class>com.mvc.controller.myProfile</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>signUp</servlet-name>
         <url-pattern>/signUp</url-pattern>
@@ -63,6 +67,10 @@
     <servlet-mapping>
         <servlet-name>income</servlet-name>
         <url-pattern>/income</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>myProfile</servlet-name>
+        <url-pattern>/myProfile</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

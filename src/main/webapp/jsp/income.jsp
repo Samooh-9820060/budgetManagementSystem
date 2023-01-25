@@ -37,7 +37,7 @@
                 <i class="fas fa-chart-line"></i>
             </div>
             <div class="logo-text">
-                <h2>Budget Management System</h2>
+                <h2 style="cursor: pointer" onclick="goToDashboard();">Budget Management System</h2>
             </div>
         </div>
 
@@ -47,7 +47,7 @@
                     <input style="align-content: center" type="text" placeholder="Search ..." class="btn-group-sm">
                 </li>
                 <li>
-                    <a>Hi, ${username}</a>
+                    <a style="cursor: pointer" onclick="goToMyProfile();">Hi, ${username}</a>
                 </li>
                 <li class="max-1200" id="navOpener">
                     <i class="fas fa-bars"></i>
@@ -284,6 +284,10 @@
             </div>
         </div>
     </main>
+    <form id="goToMyProfile" method="POST" action="./myProfile" hidden>
+        <button>Submit</button>
+    </form>
+    <form id="goToDashboard" method="POST" action="./dashboard" hidden></form>
     <script type="text/javascript" src="./assets/js/vendor.js"></script>
     <script type="text/javascript" src="./assets/js/app.js"></script>
     <form id="changeBillDateForm" method="POST" action="changeBillDates" hidden>
@@ -292,6 +296,12 @@
         <button>submit</button>
     </form>
     <script>
+        function goToMyProfile(){
+            document.getElementById("goToMyProfile").submit();
+        }
+        function goToDashboard(){
+            document.getElementById("goToDashboard").submit();
+        }
         refreshDate();
         function refreshDate(){
             var selectMonth = document.getElementById("selectMonth");

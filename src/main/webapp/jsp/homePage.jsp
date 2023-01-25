@@ -23,7 +23,7 @@
                 <i class="fas fa-chart-line"></i>
             </div>
             <div class="logo-text">
-                <h2>Budget Management System</h2>
+                <h2 style="cursor: pointer" onclick="goToDashboard();">Budget Management System</h2>
             </div>
         </div>
 
@@ -33,7 +33,7 @@
                     <input style="align-content: center" type="text" placeholder="Search ..." class="btn-group-sm">
                 </li>
                 <li>
-                    <a>Hi, ${username}</a>
+                    <a style="cursor: pointer" onclick="goToMyProfile()">Hi, ${username}</a>
                 </li>
                 <li class="max-1200" id="navOpener">
                     <i class="fas fa-bars"></i>
@@ -298,12 +298,23 @@
             </div>
         </div>
         <!--Main Area-->
+        <form id="goToMyProfilePage" method="POST" action="./myProfile" hidden></form>
+        <form id="goToDashboard" method="POST" action="./dashboard" hidden></form>
     </main>
     <!--- Main Content -->
     <script type="text/javascript" src="./assets/js/vendor.js"></script>
     <script type="text/javascript" src="./assets/js/app.js"></script>
     </body>
+        <script>
+        function goToMyProfile(){
+            document.getElementById("goToMyProfilePage").submit();
+        }
+        function goToDashboard(){
+            document.getElementById("goToDashboard").submit();
+        }
+    </script>
     <script>
+        
         function addNewTransactionForm(){
             if (document.getElementById("addNewTransactionForm").hidden === true){
                 document.getElementById("incomeExpenseChart").hidden = true;
@@ -326,11 +337,11 @@
             document.getElementById("incomeExpenseChart").hidden = true;
             document.getElementById("transactionDetails").hidden = false;
             
-            if (type === "income"){
+            if (type === "Income"){
                 document.getElementById("typeOfTransactionSelected").classList.remove("expense-txt");
                 document.getElementById("typeOfTransactionSelected").classList.add("income-txt");
                 document.getElementById("typeOfTransactionSelectedValue").innerHTML = "Income";
-            } else if (type === "expense"){
+            } else if (type === "Expense"){
                 document.getElementById("typeOfTransactionSelected").classList.remove("income-txt");
                 document.getElementById("typeOfTransactionSelected").classList.add("expense-txt");
                 document.getElementById("typeOfTransactionSelectedValue").innerHTML = "Expense";
@@ -343,6 +354,8 @@
             document.getElementById("amountOfTransactionSelectedValue").innerHTML = "Amount: "+amount;
             document.getElementById("detailsOfTransactionSelectedValue").innerHTML = "Details: "+details;
         }
+        
+        
 
     </script>
     <script>
