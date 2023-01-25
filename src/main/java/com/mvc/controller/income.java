@@ -17,6 +17,9 @@ import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -57,19 +60,31 @@ public class income extends HttpServlet {
     public List<transactionsModel> getAllIncomes(String username) throws SQLException{
         List<transactionsModel> transactions = new ArrayList<>();
         
-        String query = "SELECT TRANSACTION_ID, USERNAME, TYPE, AMOUNT, DATE, TIME, CATEGORY, DETAILS FROM TRANSACTIONS WHERE TYPE='income'"
-                + "ORDER BY DATE DESC, TIME DESC";
+        String query = "SELECT T.TRANSACTION_ID, U.USERNAME, TT.TYPE_NAME, T.AMOUNT, T.TRANSACTION_DATE, C.CATEGORY_NAME, T.DESCRIPTION \n" +
+"FROM TRANSACTIONS T \n" +
+"JOIN USERS U ON U.USER_ID = T.USER_ID \n" +
+"JOIN CATEGORIES C ON C.CATEGORY_ID = T.CATEGORY_ID \n" +
+"JOIN TRANSACTION_TYPES TT ON TT.TYPE_ID = T.TYPE_ID \n" +
+"WHERE TT.TYPE_NAME = 'Income' \n" +
+"ORDER BY T.TRANSACTION_DATE DESC";
         ResultSet resultSet = dbconnection.statement().executeQuery(query);
         while (resultSet.next()){
             String resultUsername = (String) resultSet.getObject(2);
             if  (resultUsername.equals(username)){
-                String day = getDay((Date) resultSet.getObject(5));
+                String day = getDay((Timestamp) resultSet.getObject(5));
                 transactionsModel transaction = new transactionsModel();
                 transaction.transaction_Id = (String) resultSet.getObject(1).toString();
-                transaction.details = (String) resultSet.getObject(8).toString();
-                transaction.category = (String) resultSet.getObject(7);
-                transaction.date = (String) resultSet.getObject(5).toString();
-                transaction.time = (String) resultSet.getObject(6).toString();
+                transaction.details = (String) resultSet.getObject(7).toString();
+                transaction.category = (String) resultSet.getObject(6);
+                
+                Timestamp timestamp = (Timestamp) resultSet.getObject(5);
+                LocalDateTime dateTime = timestamp.toLocalDateTime();
+                String formattedDate = dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));  
+                String formattedTime = dateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+                
+                transaction.date = formattedDate;
+                transaction.time = formattedTime;
+                
                 transaction.day = day;
                 transaction.type = (String) resultSet.getObject(3);
                 transaction.amount = (String) resultSet.getObject(4).toString();
@@ -80,9 +95,9 @@ public class income extends HttpServlet {
         return transactions;
     }
     
-    public String getDay(Date date){
+    public String getDay(Timestamp timestamp){
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+        calendar.setTime(timestamp);
         int dayInt = calendar.get(Calendar.DAY_OF_WEEK);
         String[] days = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         String day = days[dayInt - 1];
@@ -92,7 +107,12 @@ public class income extends HttpServlet {
     public List<categories> getAllCategories(String username) throws SQLException{
         List<categories> types = new ArrayList<>();
         
-        String query = "SELECT DISTINCT CATEGORY FROM TRANSACTIONS WHERE TYPE='income' AND USERNAME='"+username+"'";
+        String query = "SELECT DISTINCT C.CATEGORY_NAME "
+                + "FROM TRANSACTIONS T "
+                + "JOIN CATEGORIES C ON C.CATEGORY_ID = T.CATEGORY_ID "
+                + "JOIN USERS U ON C.USER_ID = T.USER_ID "
+                + "JOIN TRANSACTION_TYPES TT ON TT.TYPE_ID = T.TYPE_ID "
+                + "WHERE TT.TYPE_NAME = 'Income' AND U.USERNAME='"+username+"'";
         ResultSet resultSet = dbconnection.statement().executeQuery(query);
         while(resultSet.next()){
             categories type = new categories();
