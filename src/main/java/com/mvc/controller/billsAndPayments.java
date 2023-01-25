@@ -5,7 +5,6 @@
 package com.mvc.controller;
 
 import com.mvc.model.billsModel;
-import com.mvc.model.transactionsModel;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -17,7 +16,9 @@ import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -122,18 +123,25 @@ public class billsAndPayments extends HttpServlet {
     public List<billsModel> getBillDetails(String username) throws SQLException{
         List<billsModel> bills = new ArrayList<>();
         
-        String query = "SELECT BILL_ID, USERNAME, BILLTYPE, DUEDATE, AMOUNT, DETAILS, STATUS FROM BILLS ORDER BY DUEDATE DESC";
+        String query = "SELECT B.BILL_ID, U.USERNAME, B.BILL_NAME, B.DUE_DATE, B.AMOUNT, B.DESCRIPTION, B.PAYMENT_STATUS "
+                + "FROM BILLS B "
+                + "JOIN USERS U ON U.USER_ID = B.USER_ID "
+                + "ORDER BY B.DUE_DATE DESC";
         ResultSet resultSet = dbconnection.statement().executeQuery(query);
         while (resultSet.next()){
             String resultUsername = (String) resultSet.getObject(2);
             if  (resultUsername.equals(username)){
-                String day = getDay((Date) resultSet.getObject(4));
                 billsModel bill = new billsModel();
                 bill.bill_Id = (String) resultSet.getObject(1).toString();
                 bill.amount = (String) resultSet.getObject(5).toString();
                 bill.type = (String) resultSet.getObject(3).toString();
-                bill.dueDate = (String) resultSet.getObject(4).toString();
-                bill.dueDay = getDay((Date) resultSet.getObject(4));
+                
+                Timestamp timestamp = (Timestamp) resultSet.getObject(4);
+                LocalDateTime dateTime = timestamp.toLocalDateTime();
+                String formattedTime = dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));  
+                
+                bill.dueDate = formattedTime;
+                bill.dueDay = getDay((Timestamp) resultSet.getObject(4));
                 bill.details = (String) resultSet.getObject(6).toString();
                 bill.status = (String) resultSet.getObject(7).toString();
                 bills.add(bill);
@@ -145,20 +153,25 @@ public class billsAndPayments extends HttpServlet {
     public int getSelectedMonthExpense(String username, String month, String year) throws SQLException{
         int value = 0;
         
-        String query = "SELECT USERNAME, DUEDATE, AMOUNT, STATUS FROM BILLS";
+        String query = "SELECT U.USERNAME, B.DUE_DATE, B.AMOUNT, B.PAYMENT_STATUS "
+                + "FROM BILLS B "
+                + "JOIN USERS U ON U.USER_ID = B.USER_ID";
         ResultSet resultSet = dbconnection.statement().executeQuery(query);
         while (resultSet.next()){
             String resultUsername = (String) resultSet.getObject(1).toString();
             if (resultUsername.equals(username)){
-                Date dueDate = (Date) resultSet.getObject(2);
-                LocalDate localDueDate = dueDate.toLocalDate();
-                String resultYear = localDueDate.getYear()+"";
-                Month resultMonth = localDueDate.getMonth();
+                
+                Timestamp timestamp = (Timestamp) resultSet.getObject(2);
+                LocalDateTime dateTime = timestamp.toLocalDateTime();
+                String formattedTime = dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));                
+                
+                String resultYear = dateTime.getYear()+"";
+                Month resultMonth = dateTime.getMonth();
                 String resultMonthInLongFormat = resultMonth.toString();
                 
                 if (resultYear.equals(year) && (resultMonthInLongFormat.equalsIgnoreCase(month))){
                     String status = (String) resultSet.getObject(4).toString();
-                    if (status.equals("1")){
+                    if (status.equals("true")){
                         int amount = (int) resultSet.getObject(3);
                         value += amount;    
                     }
@@ -172,18 +185,23 @@ public class billsAndPayments extends HttpServlet {
     public int getSelectedYearExpense(String username, String year) throws SQLException{
         int value = 0;
         
-        String query = "SELECT USERNAME, DUEDATE, AMOUNT, STATUS FROM BILLS";
+        String query = "SELECT U.USERNAME, B.DUE_DATE, B.AMOUNT, B.PAYMENT_STATUS "
+                + "FROM BILLS B "
+                + "JOIN USERS U ON U.USER_ID = B.USER_ID";
         ResultSet resultSet = dbconnection.statement().executeQuery(query);
         while (resultSet.next()){
             String resultUsername = (String) resultSet.getObject(1).toString();
             if (resultUsername.equals(username)){
-                Date dueDate = (Date) resultSet.getObject(2);
-                LocalDate localDueDate = dueDate.toLocalDate();
-                String resultYear = localDueDate.getYear()+"";
+                
+                Timestamp timestamp = (Timestamp) resultSet.getObject(2);
+                LocalDateTime dateTime = timestamp.toLocalDateTime();
+                String formattedTime = dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));   
+                
+                String resultYear = dateTime.getYear()+"";
                 
                 if (resultYear.equals(year)){
                     String status = (String) resultSet.getObject(4).toString();
-                    if (status.equals("1")){
+                    if (status.equals("true")){
                         int amount = (int) resultSet.getObject(3);
                         value += amount;    
                     }
@@ -195,9 +213,10 @@ public class billsAndPayments extends HttpServlet {
     } 
     
     
-    public String getDay(Date date){
+    
+    public String getDay(Timestamp timestamp){
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+        calendar.setTime(timestamp);
         int dayInt = calendar.get(Calendar.DAY_OF_WEEK);
         String[] days = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         String day = days[dayInt - 1];
