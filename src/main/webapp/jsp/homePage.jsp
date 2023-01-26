@@ -233,8 +233,10 @@
                                             <label id="amountOfTransactionSelectedValue" class="text-dark"></label>
                                             <label id="detailsOfTransactionSelectedValue" class="text-dark"></label>
                                             <div class="float-right mt-3">
-                                                <button>Delete</button>
-                                                <button class="mx-5">Modify</button>
+                                                <span >
+                                                    <button class="btn btn-block btn-primary col-2">Delete</button>
+                                                    <button class="btn btn-block btn-primary col-2">Modify</button>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>

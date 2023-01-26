@@ -161,30 +161,30 @@
                         </div>
                         <div class="card-body">
                             <ul class="transaction-history-wrapper">
-                                <c:forEach var="data" items="${requestScope.transactions}">
+                                <c:forEach var="data" items="${requestScope.user_logs}">
                                     <li>
                                         <div class="row">
                                             <div class="col-8 f">
                                                 <i class="fab fa-aviato"></i>
                                                 <span class="spending-text">
                                                     <span class="heading">
-                                                        <a href="#" onclick="showTransactionDetails(${data.transaction_Id}, '${data.category}', '${data.date}', '${data.time}', '${data.day}', '${data.type}', '${data.amount}', '${data.details}')"><c:out value="${data.category}" /></a>
+                                                        <a href="#" onclick="showDetails('${data.description}')"><c:out value="${data.type}" /></a>
                                                     </span>
                                                     <span class="sub">
-                                                        <c:out value="${data.date}" /> <br><c:out value="${data.day}" />
+                                                        <c:out value="${data.date}" /> <br><c:out value="${data.time}"/> <br><c:out value="${data.day}" />
                                                     </span>
                                                 </span>
                                             </div>
                                             <div class="col-4 amt-right">
                                                 <span class="<c:choose>
-                                                                <c:when test="${data.type=='Income'}">
+                                                                <c:when test="${data.message=='Success'}">
                                                                     amount income
                                                                 </c:when>
-                                                                <c:when test="${data.type=='Expense'}">
+                                                                <c:when test="${data.message=='Fail'}">
                                                                     amount expense
                                                                 </c:when>
                                                             </c:choose>">
-                                                    $ <c:out value="${data.amount}" />
+                                                    <c:out value="${data.message}" />
                                                 </span>
                                             </div>
                                         </div>
@@ -239,6 +239,11 @@
             document.getElementById("cheap-49").checked = false;
         }
         
+                
+        function showDetails(description){
+            alert(description);
+        }
+        
         function saveDetailsButton(){
             document.getElementById("first_name_input").value = document.getElementById("first_name").value;
             document.getElementById("last_name_input").value = document.getElementById("last_name").value;
@@ -248,7 +253,11 @@
             document.getElementById("country_input").value = document.getElementById("country").value;
             document.getElementById("address_input").value = document.getElementById("address").value;
             document.getElementById("gender_input").value = document.getElementById("gender").value;
-            document.getElementById("two_factor_authentication_input").value = document.getElementById("cheap-49").value;
+            if (document.getElementById("cheap-49").checked == true){
+                document.getElementById("two_factor_authentication_input").value = "true";
+            } else if (document.getElementById("cheap-49").checked == false){
+                document.getElementById("two_factor_authentication_input").value = "false";
+            }
             
             document.getElementById("saveDetails").submit();
         }

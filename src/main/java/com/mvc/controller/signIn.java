@@ -55,8 +55,14 @@ public class signIn extends HttpServlet {
                 HttpSession session = request.getSession();
                 session.setAttribute("session", username);
                 
+                dbconnection.updateLogsTable(username, "Sign In", "Sign In", "Success");
                 response.sendRedirect("./dashboard");
             } else {
+                try {
+                    dbconnection.updateLogsTable(username, "Attempted Login", "Sign In", "Fail");
+                } catch (Exception e){
+                    
+                }
                 out.print(validity);
             }
         }

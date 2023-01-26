@@ -68,6 +68,8 @@ public class signUp extends HttpServlet {
                 statement.setBoolean(5, false);
                 statement.setInt(6, 0);
                 statement.executeUpdate();  
+                
+                dbconnection.updateLogsTable(username, "Sign Up", "Sign Up", "Success");
                 response.sendRedirect("index.html");
             } else {
                 out.println("Duplicate");

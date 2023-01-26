@@ -36,6 +36,10 @@
         <servlet-name>myProfile</servlet-name>
         <servlet-class>com.mvc.controller.myProfile</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>saveDetails</servlet-name>
+        <servlet-class>com.mvc.controller.saveDetails</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>signUp</servlet-name>
         <url-pattern>/signUp</url-pattern>
@@ -71,6 +75,10 @@
     <servlet-mapping>
         <servlet-name>myProfile</servlet-name>
         <url-pattern>/myProfile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>saveDetails</servlet-name>
+        <url-pattern>/saveDetails</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
