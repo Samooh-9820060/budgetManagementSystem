@@ -60,6 +60,12 @@
                     <li>Phone: ${phone_number}</li>
                     <li>Account Age: ${account_age}</li>
                     <li>Credit Score: ${credit_score}</li>
+                    <li>
+                        <a href="logout">
+                            <i class="fas fa-home"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
                 </ul>
         </aside>
         <!-- Sidebar -->
@@ -261,5 +267,5 @@
             
             document.getElementById("saveDetails").submit();
         }
-    </script>
+        </script>
 </html>

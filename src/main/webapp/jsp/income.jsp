@@ -117,6 +117,12 @@
                             <span>Contact Us</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="logout">
+                            <i class="fas fa-home"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
                 </ul>
         </aside>
         <!-- Sidebar -->
@@ -125,7 +131,7 @@
         <div class="main-area container-fluid">
             <div class="row">
                 <div class="col-5">
-                        <div class="card shadow">
+                        <div class="card shadow d-flex justify-content-center">
                             <div class="card-body">
                                 <div class="imp-info income-txt">
                                     <span class="info-text mx-auto">
@@ -135,7 +141,7 @@
                                         <input type="date" class="mt-3">
                                         <input type="date" class="mt-3">
                                     </span>
-                                    
+                                    <button class="btn btn-block btn-info mx-auto mt-4 d-flex justify-content-center align-content-center">Filter</button>
                                 </div>
                             </div>
                         </div>
@@ -152,6 +158,7 @@
                                         <option><c:out value="${data.type}" /></option>
                                     </c:forEach>
                                 </select>
+                                <button class="btn btn-block btn-info mx-auto mt-4 d-flex justify-content-center align-content-center">Filter</button>
                             </div>
                         </div>
                     </div>
@@ -168,6 +175,11 @@
                                     <option>Date</option>
                                     <option>Time</option>
                                 </select>
+                                <select id="sortByOrder" class="btn-sm mt-3">
+                                    <option value="Descending">Descending</option>
+                                    <option value="Ascending">Ascending</option>
+                                </select>
+                                <button class="btn btn-block btn-info mx-auto mt-4 d-flex justify-content-center align-content-center">Filter</button>
                             </div>
                         </div>
                     </div>
@@ -239,24 +251,22 @@
                     </div>
 
                 </div>
-                <div class="col-sm-12 col-md-12 col-lg-12 transaction-history transaction-history-size-medium">
-                    <div class="card shadow">
-                        <div class="limiter">
+                <div class="col-sm-12 col-md-12 col-lg-12 transaction-history transaction-history-size-small">
                             <div class="container-fluid">
                                 <div class="wrap-pic-max-h">
                                     <div class="table ver1 m-b-110">
                                         <table data-vertable="ver1">
                                             <thead>
-                                                <tr class="row100 head">
-                                                <th class="column100 column1" data-column="column1">Amount</th>
-                                                <th class="column100 column2" data-column="column2">Date</th>
-                                                <th class="column100 column3" data-column="column3">Day</th>
-                                                <th class="column100 column4" data-column="column4">Time</th>
-                                                <th class="column100 column5" data-column="column5">Category</th>
-                                                <th class="column100 column6" data-column="column6">Details</th>
+                                                <tr class="row100 head" id="headerRow">
+                                                    <th class="column100 column1" data-column="column1">Amount</th>
+                                                    <th class="column100 column2" data-column="column2">Date</th>
+                                                    <th class="column100 column3" data-column="column3">Day</th>
+                                                    <th class="column100 column4" data-column="column4">Time</th>
+                                                    <th class="column100 column5" data-column="column5">Category</th>
+                                                    <th class="column100 column6" data-column="column6">Details</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody class="tableRows">
                                                 <c:forEach var="data" items="${requestScope.incomes}">
                                                     <tr class="row100">
                                                         <td class="column100 column1" data-column="column1"><c:out value="MVR ${data.amount}"/></td>
@@ -269,17 +279,14 @@
                                                 </c:forEach>
                                             </tbody>
                                         </table>
+                                            <div class="card-footer" id="footerRow">
+                                                <div class="">
+                                                    <button class="btn btn-info" onclick="addNewTransactionForm()">Add New</button>
+                                                </div>
+                                            </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="card-footer">
-                            <div class="transaction-footer">
-                                <button class="btn btn-info" onclick="addNewTransactionForm()">Add New</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -327,5 +334,33 @@
          .transaction-history-size-medium {
             height: 250px;
          }
+    </style>
+    <style>
+        .table {
+            height: 300px;
+            overflow: auto;
+            table-layout: fixed;
+         }
+         .transaction-history-size-medium {
+            height: 250px;
+         }
+         
+         
+         #headerRow, #footerRow {
+            position: relative;
+            top: 0;
+            z-index: 1;
+        }
+        table tbody{
+            overflow-y: scroll;
+        }
+        
+        table th, table td {
+            width: 150px;
+        }
+        
+        .hidden {
+            visibility: hidden;
+        }
     </style>
 </html>

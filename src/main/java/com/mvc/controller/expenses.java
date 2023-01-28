@@ -65,7 +65,7 @@ public class expenses extends HttpServlet {
 "JOIN USERS U ON U.USER_ID = T.USER_ID \n" +
 "JOIN CATEGORIES C ON C.CATEGORY_ID = T.CATEGORY_ID \n" +
 "JOIN TRANSACTION_TYPES TT ON TT.TYPE_ID = T.TYPE_ID \n" +
-"WHERE TT.TYPE_NAME = 'Expense' \n" +
+"WHERE TT.TYPE_NAME = 'Expense' AND U.USERNAME = '"+username+"'\n" +
 "ORDER BY T.TRANSACTION_DATE DESC";
         ResultSet resultSet = dbconnection.statement().executeQuery(query);
         while (resultSet.next()){

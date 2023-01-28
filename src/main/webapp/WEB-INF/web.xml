@@ -40,6 +40,18 @@
         <servlet-name>saveDetails</servlet-name>
         <servlet-class>com.mvc.controller.saveDetails</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>filterTransactions</servlet-name>
+        <servlet-class>com.mvc.controller.filterTransactions</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>logout</servlet-name>
+        <servlet-class>com.mvc.controller.logout</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>deleteTransaction</servlet-name>
+        <servlet-class>com.mvc.controller.deleteTransaction</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>signUp</servlet-name>
         <url-pattern>/signUp</url-pattern>
@@ -79,6 +91,18 @@
     <servlet-mapping>
         <servlet-name>saveDetails</servlet-name>
         <url-pattern>/saveDetails</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>filterTransactions</servlet-name>
+        <url-pattern>/filterTransactions</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>deleteTransaction</servlet-name>
+        <url-pattern>/deleteTransaction</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

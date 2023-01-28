@@ -103,6 +103,12 @@
                             <span>Contact Us</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="logout">
+                            <i class="fas fa-home"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
                 </ul>
         </aside>
         <!-- Sidebar -->
@@ -226,6 +232,7 @@
                                     <div class="card-body">
                                         <div id="typeOfTransactionSelected" class="imp-info">
                                             <span id="typeOfTransactionSelectedValue" class="info-text" style="font-size: 20px"></span>
+                                            <label id="transactionIDSelected" hidden></label>
                                             <label id="dateOfTransactionSelectedValue" class="mt-4 text-dark"></label>
                                             <label id="timeOfTransactionSelectedValue" class="text-dark"></label>
                                             <label id="dayOfTransactionSelectedValue" class="text-dark"></label>
@@ -234,7 +241,7 @@
                                             <label id="detailsOfTransactionSelectedValue" class="text-dark"></label>
                                             <div class="float-right mt-3">
                                                 <span >
-                                                    <button class="btn btn-block btn-primary col-2">Delete</button>
+                                                    <button onclick="deleteTransaction();" class="btn btn-block btn-primary col-2">Delete</button>
                                                     <button class="btn btn-block btn-primary col-2">Modify</button>
                                                 </span>
                                             </div>
@@ -355,6 +362,12 @@
             document.getElementById("categoryOfTransactionSelectedValue").innerHTML = "Category: "+category;
             document.getElementById("amountOfTransactionSelectedValue").innerHTML = "Amount: "+amount;
             document.getElementById("detailsOfTransactionSelectedValue").innerHTML = "Details: "+details;
+            document.getElementById("transactionIDSelected").innerHTML = transactionId;
+        }
+        
+        function deleteTransaction(){
+            var transactionID = document.getElementById("transactionIDSelected").innerHTML;
+            window.location.href = "deleteTransaction?transactionID="+transactionID+"&function=delete";   
         }
         
         

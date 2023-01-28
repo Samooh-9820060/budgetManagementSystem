@@ -13,7 +13,7 @@
     <title>Home Page</title>
     <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,500,700" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-    <link href="./assets/css/homePage.css" rel="stylesheet"></head>
+    <link href="./assets/css/homePage.css" rel="stylesheet">
 
     <link rel="icon" type="image/png" href="https://colorlib.com/etc/tb/Table_Highlight_Vertical_Horizontal/images/icons/favicon.ico">
 
@@ -29,6 +29,7 @@
 
     <link rel="stylesheet" type="text/css" href="./assets/css/util.css">
     <link rel="stylesheet" type="text/css" href="./assets/css/main.css">
+    </head>
 <body>
     <!--Hader Navigation-->
     <header class="top-nav">
@@ -44,7 +45,7 @@
         <div class="nav-link-right">
             <ul>
                 <li>
-                    <input style="align-content: center" type="text" placeholder="Search ..." class="btn-group-sm">
+                    <input class="justify-content-center mx-auto"  style="align-content: center" type="text" placeholder="Search ..." class="btn-group-sm">
                 </li>
                 <li>
                     <a style="cursor: pointer" onclick="goToMyProfile();">Hi, ${username}</a>
@@ -117,6 +118,12 @@
                             <span>Contact Us</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="logout">
+                            <i class="fas fa-home"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
                 </ul>
         </aside>
         <!-- Sidebar -->
@@ -125,17 +132,17 @@
         <div class="main-area container-fluid">
             <div class="row">
                 <div class="col-5">
-                        <div class="card shadow">
+                        <div class="card shadow d-flex justify-content-center">
                             <div class="card-body">
                                 <div class="imp-info income-txt">
                                     <span class="info-text mx-auto">
                                         Filter By Date
                                     </span>
                                     <span class="mx-auto">
-                                        <input type="date" class="mt-3">
-                                        <input type="date" class="mt-3">
+                                        <input type="date" id="startDate" class="mt-3" oninput="checkDates()">
+                                        <input type="date" id="endDate" class="mt-3" oninput="checkDates()">
                                     </span>
-                                    
+                                    <button id="filterDate" onclick="filterTransactionsDate()"  class="btn btn-block btn-info mx-auto mt-4 d-flex justify-content-center align-content-center" disabled>Filter</button>
                                 </div>
                             </div>
                         </div>
@@ -147,11 +154,12 @@
                                 <span class="info-text ">
                                     Filter By Type
                                 </span>
-                                <select class="btn-sm mt-3">
+                                <select class="btn-sm mt-3" id="selectedType">
                                     <c:forEach var="data" items="${requestScope.categories}">
-                                        <option><c:out value="${data.type}" /></option>
+                                        <option value="${data.type}" ><c:out value="${data.type}" /></option>
                                     </c:forEach>
                                 </select>
+                                <button onclick="filterType()" class="btn btn-block btn-info mx-auto mt-4 d-flex justify-content-center align-content-center">Filter</button>
                             </div>
                         </div>
                     </div>
@@ -163,11 +171,15 @@
                                 <span class="info-text ">
                                     Sort By
                                 </span>
-                                <select class="btn-sm mt-3">
-                                    <option>Amount</option>
-                                    <option>Date</option>
-                                    <option>Time</option>
+                                <select id="sortByType" class="btn-sm mt-3">
+                                    <option value="Amount">Amount</option>
+                                    <option value="Date">Date</option>
                                 </select>
+                                <select id="sortByOrder" class="btn-sm mt-3">
+                                    <option value="Descending">Descending</option>
+                                    <option value="Ascending">Ascending</option>
+                                </select>
+                                <button onclick="sortBy()" class="btn btn-block btn-info mx-auto mt-4 d-flex justify-content-center align-content-center">Filter</button>
                             </div>
                         </div>
                     </div>
@@ -245,16 +257,16 @@
                                     <div class="table ver1 m-b-110">
                                         <table data-vertable="ver1">
                                             <thead>
-                                                <tr class="row100 head">
-                                                <th class="column100 column1" data-column="column1">Amount</th>
-                                                <th class="column100 column2" data-column="column2">Date</th>
-                                                <th class="column100 column3" data-column="column3">Day</th>
-                                                <th class="column100 column4" data-column="column4">Time</th>
-                                                <th class="column100 column5" data-column="column5">Category</th>
-                                                <th class="column100 column6" data-column="column6">Details</th>
+                                                <tr class="row100 head" id="headerRow">
+                                                    <th class="column100 column1" data-column="column1">Amount</th>
+                                                    <th class="column100 column2" data-column="column2">Date</th>
+                                                    <th class="column100 column3" data-column="column3">Day</th>
+                                                    <th class="column100 column4" data-column="column4">Time</th>
+                                                    <th class="column100 column5" data-column="column5">Category</th>
+                                                    <th class="column100 column6" data-column="column6">Details</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody class="tableRows">
                                                 <c:forEach var="data" items="${requestScope.expenses}">
                                                     <tr class="row100">
                                                         <td class="column100 column1" data-column="column1"><c:out value="MVR ${data.amount}"/></td>
@@ -267,7 +279,7 @@
                                                 </c:forEach>
                                             </tbody>
                                         </table>
-                                            <div class="card-footer">
+                                            <div class="card-footer" id="footerRow">
                                                 <div class="">
                                                     <button class="btn btn-info" onclick="addNewTransactionForm()">Add New</button>
                                                 </div>
@@ -279,6 +291,7 @@
             </div>
         </div>
     </main>
+                                        
     <form id="goToMyProfile" method="POST" action="./myProfile" hidden>
         <button>Submit</button>
     </form>
@@ -290,6 +303,9 @@
         <input id="selectedYear" name="selectedYear">
         <button>submit</button>
     </form>
+    <script>
+        checkDates();
+    </script>
     <script>
         function goToMyProfile(){
             document.getElementById("goToMyProfile").submit();
@@ -313,14 +329,152 @@
             document.getElementById("selectedYear").value = document.getElementById("selectYear").value;
             document.getElementById("changeBillDateForm").submit();
         }
+        
+        
+
     </script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        var filterByValue = urlParams.get('filterBy');
+        alert(filterByValue);
+        if (filterBy === "Sort"){
+            document.getElementById("sortByType").value = '${sortType}';
+            document.getElementById("sortByOrder").value = '${sortByOrder}';
+        } else if (filterBy === "Type"){
+            document.getElementById("selectedType").value = '${selectedType}';
+        } else if (filterBy === "Date"){
+            document.getElementById("startDate").value = '${startDate}';
+            document.getElementById("endDate").value = '${endDate}';
+        } else if (filterBy === "DateSort"){
+            document.getElementById("startDate").value = '${startDate}';
+            document.getElementById("endDate").value = '${endDate}';
+            document.getElementById("sortByType").value = '${sortType}';
+            document.getElementById("sortByOrder").value = '${sortByOrder}';
+        } else if (filterBy === "TypeSort"){
+            document.getElementById("selectedType").value = '${selectedType}';
+            document.getElementById("sortByType").value = '${sortType}';
+            document.getElementById("sortByOrder").value = '${sortByOrder}';
+        } else if (filterBy === "DateTypeSort" || filterBy === "TypeDateSort"){
+            document.getElementById("sortByType").value = '${sortType}';
+            document.getElementById("sortByOrder").value = '${sortByOrder}';
+            document.getElementById("selectedType").value = '${selectedType}';
+            document.getElementById("startDate").value = '${startDate}';
+            document.getElementById("endDate").value = '${endDate}';
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script><!-- comment -->
+    <script>
+       $(document).ready(function() {
+            $(window).on('scroll', function() {
+            var header = $('#headerRow');
+            var headerPosition = header.offset().top;
+            var currentPosition = $(window).scrollTop();
+            if (currentPosition >= headerPosition) {
+              $('#headerRow + tbody tr').addClass('hidden');
+            } else {
+              $('#headerRow + tbody tr').removeClass('hidden');
+            }
+          });
+        });
+    </script>
+
+    <script>  
+        function checkDates() {
+            var startDate = document.getElementById("startDate").value;
+            var endDate = document.getElementById("endDate").value;
+            var filterBtn = document.getElementById("filterDate");
+
+            if (startDate && endDate) {
+                filterBtn.disabled = false;
+                
+            } else {
+                filterBtn.disabled = true;
+            }
+        }
+        
+        function filterTransactionsDate(){
+            const urlParams = new URLSearchParams(window.location.search);
+            var type = urlParams.get('type');
+            if (type === "Type"){
+                filterDateType();
+            } else if (type === "Sort" || type === "DateSort" || type === "TypeSort" || type === "DateTypeSort"){
+                sortBy();
+            } else {
+                var startDate = document.getElementById("startDate").value;
+                var endDate = document.getElementById("endDate").value;
+                window.location.href = "filterTransactions?filterBy=Date&startDate=" + startDate + "&endDate=" + endDate + "&type=Expense";   
+            }
+            
+        };
+        function filterType(){
+            const urlParams = new URLSearchParams(window.location.search);
+            var type = urlParams.get('type');
+            alert(type);
+            if (type === "Date"){
+                filterDateType();
+            } else if (type === "Sort" || type === "DateSort" || type === "TypeSort" || type === "DateTypeSort"){
+                sortBy();
+            }
+            else {
+                var selectedType = document.getElementById("selectedType").value;
+                window.location.href = "filterTransactions?filterBy=Type&selectedType=" + selectedType + "&type=Expense";   
+            }
+        };
+        function sortBy(){
+            var sortByType = document.getElementById("sortByType").value;
+            var sortByOrder = document.getElementById("sortByOrder").value;
+            const urlParams = new URLSearchParams(window.location.search);
+            var filterBy = urlParams.get('filterBy');
+            var type = urlParams.get('type');
+            if (filterBy === "Date"){
+                var startDate = urlParams.get('startDate');
+                var endDate = urlParams.get('endDate');
+                window.location.href = "filterTransactions?filterBy=DateSort&sortBy="+sortByType+"&startDate=" + startDate + "&endDate="+endDate+"&sortBy="+sortByType+"&sortByOrder="+sortByOrder+"&type=" + type;  
+            } else if (filterBy === "Type"){
+                var selectedType = urlParams.get('selectedType');
+                window.location.href = "filterTransactions?filterBy=TypeSort&sortBy="+sortByType+"&selectedType=" + selectedType + "&sortBy="+sortByType+"&sortByOrder="+sortByOrder+"&type=" + type;  
+            } else if (filterBy === null || filterBy === "Sort"){
+                window.location.href = "filterTransactions?filterBy=Sort&sortBy="+sortByType+"&sortByOrder="+sortByOrder+"&type=Expense"; 
+            } else if (filterBy === "DateType"){
+                window.location.href = "filterTransactions?filterBy=DateTypeSort&sortBy="+sortByType+"&selectedType="+selectedType+"&startDate=" + startDate + "&endDate="+endDate+"&sortBy="+sortByType+"&sortByOrder="+sortByOrder+"&type=" + type;
+            }
+        };
+        function filterDateType(){
+            var startDate = document.getElementById("startDate").value;
+            var endDate = document.getElementById("endDate").value;
+            var selectedType = document.getElementById("selectedType").value;
+    
+            window.location.href = "filterTransactions?filterBy=DateType&&selectedType = "+selectedType+"&startDate=" + startDate + "&endDate=" + endDate + "&type=Expense";   
+            
+        };
+    </script><!-- check date validity -->
     <style>
-        .table  {
-            height: 350px;
+        .table {
+            height: 300px;
             overflow: auto;
+            table-layout: fixed;
          }
          .transaction-history-size-medium {
             height: 250px;
          }
+         
+         
+         #headerRow, #footerRow {
+            position: relative;
+            top: 0;
+            z-index: 1;
+        }
+        table tbody{
+            overflow-y: scroll;
+        }
+        
+        table th, table td {
+            width: 150px;
+        }
+        
+        .hidden {
+            visibility: hidden;
+        }
     </style>
+</body>
 </html>

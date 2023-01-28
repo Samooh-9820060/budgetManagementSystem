@@ -102,6 +102,12 @@
                             <span>Contact Us</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="logout">
+                            <i class="fas fa-home"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
                 </ul>
         </aside>
         <!-- Sidebar -->
