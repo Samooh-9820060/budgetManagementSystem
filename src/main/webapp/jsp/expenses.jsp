@@ -336,7 +336,6 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         var filterByValue = urlParams.get('filterBy');
-        alert(filterByValue);
         if (filterBy === "Sort"){
             document.getElementById("sortByType").value = '${sortType}';
             document.getElementById("sortByOrder").value = '${sortByOrder}';
@@ -409,7 +408,6 @@
         function filterType(){
             const urlParams = new URLSearchParams(window.location.search);
             var type = urlParams.get('type');
-            alert(type);
             if (type === "Date"){
                 filterDateType();
             } else if (type === "Sort" || type === "DateSort" || type === "TypeSort" || type === "DateTypeSort"){
